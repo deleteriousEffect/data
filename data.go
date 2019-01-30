@@ -36,7 +36,7 @@ const (
 )
 
 type Amount interface {
-	InclusiveSize() int64
+	InclusiveBytes() ByteSize
 	Value() float64
 	To(ByteSize) float64
 	fmt.Stringer
@@ -50,8 +50,8 @@ func NewByte(b ByteSize) Byte {
 	return Byte{b}
 }
 
-func (b Byte) InclusiveSize() int64 {
-	return b.inclusiveSize(B)
+func (b Byte) InclusiveBytes() ByteSize {
+	return b.inclusiveBytes(B)
 }
 
 func (b Byte) Value() float64 {
@@ -62,7 +62,7 @@ func (b Byte) String() string {
 	return b.toHuman()
 }
 
-func (b Byte) inclusiveSize(base ByteSize) int64 {
+func (b Byte) inclusiveBytes(base ByteSize) ByteSize {
 
 	res := b.bytes / base
 	remainder := b.bytes % base
@@ -73,7 +73,7 @@ func (b Byte) inclusiveSize(base ByteSize) int64 {
 		res--
 	}
 
-	return int64(res)
+	return res * base
 }
 
 func (b Byte) To(base ByteSize) float64 {
@@ -110,8 +110,8 @@ func NewKibiByte(b ByteSize) KibiByte {
 	return KibiByte{Byte{b}}
 }
 
-func (k KibiByte) InclusiveSize() int64 {
-	return k.bytes.inclusiveSize(KiB)
+func (k KibiByte) InclusiveBytes() ByteSize {
+	return k.bytes.inclusiveBytes(KiB)
 }
 
 func (k KibiByte) Value() float64 {

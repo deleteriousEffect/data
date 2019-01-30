@@ -47,10 +47,10 @@ func TestValue(t *testing.T) {
 	}
 }
 
-func TestInclusiveSize(t *testing.T) {
+func TestInclusiveBytes(t *testing.T) {
 	var tableTests = []struct {
 		in  Amount
-		out int64
+		out ByteSize
 	}{
 		{NewByte(2000), 2000},
 		{NewByte(10), 10},
@@ -60,17 +60,19 @@ func TestInclusiveSize(t *testing.T) {
 		{NewByte(ByteSize(NewKibiByte(KiB).To(B))), 1024},
 		{NewByte(0), 0},
 
-		{NewKibiByte(512), 1},
-		{NewKibiByte(KiB + 1), 2},
-		{NewKibiByte(KiB - 1), 1},
+		{NewKibiByte(512), 1024},
+		{NewKibiByte(KiB + 1), 2048},
+		{NewKibiByte(KiB - 1), 1024},
 		{NewKibiByte(0), 0},
-		{NewKibiByte((KiB + 1) * -1), -2},
-		{NewKibiByte((KiB - 1) * -1), -1},
+		{NewKibiByte((KiB + 1) * -1), -2048},
+		{NewKibiByte((KiB - 1) * -1), -1024},
+
+		{NewByte(NewKibiByte(512).InclusiveBytes()), 1024},
 	}
 
 	for _, tt := range tableTests {
-		if tt.in.InclusiveSize() != tt.out {
-			t.Errorf("expected: %d, got: %d, from %+v", tt.out, tt.in.InclusiveSize(), tt.in)
+		if tt.in.InclusiveBytes() != tt.out {
+			t.Errorf("expected: %d, got: %d, from %+v", tt.out, tt.in.InclusiveBytes(), tt.in)
 		}
 	}
 }
